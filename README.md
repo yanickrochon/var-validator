@@ -25,7 +25,7 @@ npm install var-validator
 
 * **isValid** *(String[, Object])* : *{boolean}* - validate that the given string is
 a valid variable name. The second argument are options overrides. See
-[enable / disable](#enable-disable-features) features for more information.
+[enable / disable](#enable--disable-features) features for more information.
 
 
 ### Simple Usage
