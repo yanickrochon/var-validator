@@ -18,6 +18,7 @@ npm install var-validator
 * Validate if variable is not a reserved keyword
 * Support dot-separated variable scope (i.e. object properties). Ex: `foo.bar`
 * Handle bracket accessors. Ex: `foo["bar"].buz` or `foo['bar'].buz` or `foo[bar].buz`.
+* 100% coverage and use case testing
 
 
 ## Usage

@@ -109,6 +109,7 @@ const TYPE_NAME_REGEX = new RegExp('^(?!(?:do|if|in|for|let|new|try|var|case|els
 
 const SCOPE_SEPARATOR = '.';
 const BRACKET_PATTERN = /^([^\[\]]+)(?:\s*\[\s*(["']?)\s*(.*)?\s*\2\s*\])?$/;
+const NUMERIC_KEY_PATTERN = /^[0-9]+$/;
 
 var defaultOptions = {
   enableScope: DEFAULT_ENABLE_SCOPE,
@@ -166,24 +167,32 @@ function validateName(name, options) {
   var iLen;
   var key;
   var keyMatch;
+  var keyKey;
+  var opt;
 
-  options = options || {};
+  if (options) {
+    opt = {};
 
-  for (i = 0, iLen = optionsKeys.length; i < iLen; ++i) {
-    key = optionsKeys[i];
-    if (!(key in options)) {
-      options[key] = defaultOptions[key];
+    for (i = 0, iLen = optionsKeys.length; i < iLen; ++i) {
+      key = optionsKeys[i];
+      if (key in options) {
+        opt[key] = options[key];
+      } else {
+        opt[key] = defaultOptions[key];
+      }
     }
+  } else {
+    opt = defaultOptions;
   }
-  
+
   function invalidVar(v) {
     return !TYPE_NAME_REGEX.test(v) ||
-           (!options.allowLowerCase && v.toLocaleUpperCase() != v) ||
-           (!options.allowUpperCase && v.toLocaleLowerCase() != v)
+           (!opt.allowLowerCase && v.toLocaleUpperCase() != v) ||
+           (!opt.allowUpperCase && v.toLocaleLowerCase() != v)
   }
 
   if (typeof name === 'string') {
-    if (options.enableScope) {
+    if (opt.enableScope) {
       nameParts = name.split(SCOPE_SEPARATOR);
     } else {
       nameParts = [name];
@@ -192,12 +201,12 @@ function validateName(name, options) {
     for (i = 0, iLen = nameParts.length; i < iLen; ++i) {
       key = nameParts[i];
 
-      if (options.enableBrackets) {
+      if (opt.enableBrackets) {
         keyMatch = key.match(BRACKET_PATTERN);
 
         if (!keyMatch ||
             invalidVar(keyMatch[1].trim()) ||
-            (!keyMatch[2] && invalidVar(keyMatch[3].trim()))
+            (!keyMatch[2] && keyMatch[3] && !NUMERIC_KEY_PATTERN.test(keyKey = keyMatch[3].trim()) && invalidVar(keyKey))
            ) {
 
           return false;
