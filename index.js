@@ -170,7 +170,7 @@ function validateName(name, options) {
   var keyKey;
   var opt;
 
-  if (options) {
+  if (options && (options.constructor.name === 'Object')) {
     opt = {};
 
     for (i = 0, iLen = optionsKeys.length; i < iLen; ++i) {
